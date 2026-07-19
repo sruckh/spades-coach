@@ -1,0 +1,14 @@
+# Spades Coach — deployed as a static nginx container behind a reverse proxy.
+# The proxy (also on shared_net) terminates TLS and forwards
+# https://<your-domain> -> http://spades:80. No host ports are exposed.
+services:
+  spades:
+    build: .
+    container_name: spades
+    restart: unless-stopped
+    networks:
+      - shared_net
+
+networks:
+  shared_net:
+    external: true

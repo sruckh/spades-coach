@@ -1,0 +1,27 @@
+{
+  "name": "Spades Coach",
+  "short_name": "Spades",
+  "description": "Play Spades with a built-in AI coach.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1420",
+  "theme_color": "#141C2E",
+  "categories": ["games"],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

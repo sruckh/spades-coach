@@ -1,0 +1,7 @@
+node_modules
+dist
+.goals
+.outline
+.serena
+preview.png
+package-lock.json

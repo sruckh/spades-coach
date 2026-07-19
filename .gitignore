@@ -1,0 +1,29 @@
+# dependencies
+node_modules
+
+# build output
+dist
+dist-ssr
+
+# logs / caches
+*.log
+npm-debug.log*
+.vite
+
+# editor / OS
+.DS_Store
+*.local
+
+# agent brains, indexes & scratch (not app source)
+.goals
+.outline
+.serena
+.tokensave
+.claude
+
+# reference screenshots (not app source)
+images
+
+# agent instruction files (local only, not part of the public project)
+CLAUDE.md
+AGENTS.md

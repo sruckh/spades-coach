@@ -1,0 +1,23 @@
+node_modules
+dist
+.git
+.gitignore
+.outline
+.serena
+.goals
+.claude
+*.log
+npm-debug.log*
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.zip
+
+# reference assets, tests, and the local code index — not needed to build dist/
+images
+tests
+.tokensave
+
+# agent instruction files
+CLAUDE.md
+AGENTS.md
