@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "description": "Spades Coach — a Spades card game with a built-in AI coach (client-only, Dockerized).",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

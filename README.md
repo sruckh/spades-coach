@@ -14,7 +14,7 @@
 **Spades Coach** is a fully client-side (no server) game of [Spades](https://en.wikipedia.org/wiki/Spades_%28card_game%29) — you and an AI partner versus two AI opponents — with a coach that explains the *why* behind every decision. Ask for advice on any bid or play and it tells you **what to do and the reasoning**, drawing on the exact same analysis the bots use. It never plays for you; it teaches.
 
 <p align="center">
-  <img src="./preview.png" width="300" alt="Spades Coach mobile UI — night-parlor table, fanned hand, and the coach sheet">
+  <img src="./assets/readme/screenshot.jpg" width="300" alt="Spades Coach on Android — status-bar scoreboard, compass-rose table with seat bids, a fanned hand, and the bid picker">
 </p>
 
 ## Features
@@ -132,4 +132,8 @@ Dockerfile     multi-stage build → nginx
 
 ## License
 
-Not yet specified — all rights reserved by the author until a license is added.
+[Apache-2.0](./LICENSE) © 2026 sruckh.
+
+<p align="center">
+  <a href="https://github.com/oil-oil/beautify-github-readme"><img src="./assets/readme/made-with-beautify.svg" width="300" alt="README made with beautify-github-readme"></a>
+</p>
