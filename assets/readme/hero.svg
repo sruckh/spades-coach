@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="t d">
+  <title id="t">Spades Coach</title>
+  <desc id="d">Spades Coach — an AI coach that explains the why behind every bid, trick, and bag while you play. A fanned hand of cards with the Ace of spades ringed in brass.</desc>
+
+  <defs>
+    <style>
+      .serif { font-family: Georgia, 'Times New Roman', serif; }
+      .sans  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="360" rx="26" fill="#141c2e"/>
+  <rect x="1" y="1" width="1198" height="358" rx="25" fill="none" stroke="#2c3a57" stroke-width="1"/>
+
+  <!-- compass-rose table motif behind the hand -->
+  <circle cx="930" cy="162" r="150" fill="none" stroke="#5b7fb0" stroke-opacity="0.22" stroke-width="1.5" stroke-dasharray="3 7"/>
+
+  <!-- title block -->
+  <g transform="translate(72 0)">
+    <text x="0" y="88" class="mono" font-size="19" letter-spacing="4" fill="#c9a24b">CARD GAME · AI COACH</text>
+
+    <text x="0" y="184" class="serif" font-size="66" fill="#c9a24b">&#9824;</text>
+    <text x="70" y="184" class="serif" font-size="72" font-weight="700" fill="#eae6dc">Spades Coach</text>
+
+    <text x="2" y="234" class="sans" font-size="25" fill="#aeb8ca">An AI coach that teaches as you play —</text>
+    <text x="2" y="268" class="sans" font-size="25" fill="#aeb8ca">the why behind every bid, trick, and bag.</text>
+
+    <text x="2" y="322" class="mono" font-size="18" letter-spacing="2" fill="#6c778c">client-only · boardgame.io · 114 tests</text>
+  </g>
+
+  <!-- project-native motif: a fanned hand, the coached Ace ringed in brass -->
+  <g>
+    <!-- 2 of clubs -->
+    <g transform="translate(830 179) rotate(-24)">
+      <rect x="-45" y="-65" width="90" height="130" rx="11" fill="#f4efe3" stroke="#d9d0bc" stroke-width="2"/>
+      <text x="0" y="20" class="serif" font-size="42" fill="#1b2230" fill-opacity="0.15" text-anchor="middle">&#9827;</text>
+      <text x="-31" y="-36" class="serif" font-size="27" font-weight="700" fill="#1b2230">2</text>
+      <text x="-31" y="-8" font-size="25" fill="#1b2230">&#9827;</text>
+    </g>
+    <!-- Q of hearts -->
+    <g transform="translate(880 161) rotate(-12)">
+      <rect x="-45" y="-65" width="90" height="130" rx="11" fill="#f4efe3" stroke="#d9d0bc" stroke-width="2"/>
+      <text x="0" y="20" class="serif" font-size="42" fill="#c0392b" fill-opacity="0.15" text-anchor="middle">&#9829;</text>
+      <text x="-31" y="-36" class="serif" font-size="27" font-weight="700" fill="#c0392b">Q</text>
+      <text x="-31" y="-8" font-size="25" fill="#c0392b">&#9829;</text>
+    </g>
+    <!-- 10 of diamonds -->
+    <g transform="translate(980 161) rotate(12)">
+      <rect x="-45" y="-65" width="90" height="130" rx="11" fill="#f4efe3" stroke="#d9d0bc" stroke-width="2"/>
+      <text x="0" y="20" class="serif" font-size="42" fill="#c0392b" fill-opacity="0.15" text-anchor="middle">&#9830;</text>
+      <text x="-31" y="-36" class="serif" font-size="25" font-weight="700" fill="#c0392b">10</text>
+      <text x="-31" y="-8" font-size="25" fill="#c0392b">&#9830;</text>
+    </g>
+    <!-- K of spades -->
+    <g transform="translate(1030 179) rotate(24)">
+      <rect x="-45" y="-65" width="90" height="130" rx="11" fill="#f4efe3" stroke="#d9d0bc" stroke-width="2"/>
+      <text x="0" y="20" class="serif" font-size="42" fill="#1b2230" fill-opacity="0.15" text-anchor="middle">&#9824;</text>
+      <text x="-31" y="-36" class="serif" font-size="27" font-weight="700" fill="#1b2230">K</text>
+      <text x="-31" y="-8" font-size="25" fill="#1b2230">&#9824;</text>
+    </g>
+    <!-- A of spades — the coached card -->
+    <g transform="translate(930 153)">
+      <rect x="-49" y="-69" width="98" height="138" rx="13" fill="none" stroke="#e4c273" stroke-width="3"/>
+      <rect x="-45" y="-65" width="90" height="130" rx="11" fill="#f4efe3" stroke="#d9d0bc" stroke-width="2"/>
+      <text x="0" y="22" class="serif" font-size="54" fill="#1b2230" fill-opacity="0.20" text-anchor="middle">&#9824;</text>
+      <text x="-31" y="-36" class="serif" font-size="29" font-weight="700" fill="#1b2230">A</text>
+      <text x="-31" y="-6" font-size="27" fill="#1b2230">&#9824;</text>
+    </g>
+  </g>
+
+  <!-- coach tag under the fan -->
+  <g transform="translate(818 286)">
+    <rect width="224" height="38" rx="19" fill="#c9a24b"/>
+    <text x="112" y="25" class="sans" font-size="17" font-weight="700" fill="#0d1420" text-anchor="middle">COACH · cash the A&#9824;</text>
+  </g>
+</svg>

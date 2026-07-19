@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="548" viewBox="0 0 1200 548"
+     role="img" aria-labelledby="t d">
+  <title id="t">Spades Coach architecture</title>
+  <desc id="d">Three strict layers. Layer A is the pure, deterministic engine (Spades.ts, deck.ts, scoring.ts). Layer B is pure analysis and AI (legalPlays, suggestPlay, suggestBid, coach, bots). Layer C is the React and Zustand UI. Rules live in the engine; the analysis, coach, bots, and UI only ask it and never re-derive rules.</desc>
+
+  <defs>
+    <style>
+      .serif { font-family: Georgia, 'Times New Roman', serif; }
+      .sans  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      .mono  { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .chip  { fill: #141c2e; stroke: #2c3a57; stroke-width: 1.5; }
+      .chipt { fill: #eae6dc; font-size: 20px; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="548" rx="26" fill="#141c2e"/>
+  <rect x="1" y="1" width="1198" height="546" rx="25" fill="none" stroke="#2c3a57"/>
+
+  <!-- header -->
+  <text x="56" y="56" class="mono" font-size="18" letter-spacing="3" fill="#c9a24b">ARCHITECTURE · THREE PURE LAYERS</text>
+  <text x="56" y="102" class="serif" font-size="33" fill="#eae6dc">Rules live in the engine. Everything else only asks.</text>
+
+  <!-- Layer A: engine -->
+  <g>
+    <rect x="56" y="140" width="1088" height="96" rx="16" fill="#1b2942" stroke="#2c3a57"/>
+    <text x="82" y="204" class="serif" font-size="46" fill="#c9a24b">A</text>
+    <text x="128" y="182" class="sans" font-size="21" font-weight="700" fill="#eae6dc">ENGINE</text>
+    <text x="128" y="208" class="mono" font-size="14" fill="#8c97ad">pure · deterministic</text>
+    <g>
+      <rect class="chip" x="360" y="168" width="150" height="40" rx="10"/><text class="mono chipt" x="435" y="194" text-anchor="middle">Spades.ts</text>
+      <rect class="chip" x="526" y="168" width="120" height="40" rx="10"/><text class="mono chipt" x="586" y="194" text-anchor="middle">deck.ts</text>
+      <rect class="chip" x="662" y="168" width="150" height="40" rx="10"/><text class="mono chipt" x="737" y="194" text-anchor="middle">scoring.ts</text>
+    </g>
+  </g>
+
+  <!-- arrow A -> B -->
+  <path d="M600 238 L600 266" stroke="#c9a24b" stroke-width="2"/>
+  <path d="M593 261 L600 270 L607 261 Z" fill="#c9a24b"/>
+
+  <!-- Layer B: analysis & AI -->
+  <g>
+    <rect x="56" y="272" width="1088" height="96" rx="16" fill="#1b2942" stroke="#2c3a57"/>
+    <text x="82" y="336" class="serif" font-size="46" fill="#c9a24b">B</text>
+    <text x="128" y="314" class="sans" font-size="21" font-weight="700" fill="#eae6dc">ANALYSIS &amp; AI</text>
+    <text x="128" y="340" class="mono" font-size="14" fill="#8c97ad">shared brains</text>
+    <g>
+      <rect class="chip" x="360" y="300" width="146" height="40" rx="10"/><text class="mono chipt" x="433" y="326" text-anchor="middle">legalPlays</text>
+      <rect class="chip" x="522" y="300" width="156" height="40" rx="10"/><text class="mono chipt" x="600" y="326" text-anchor="middle">suggestPlay</text>
+      <rect class="chip" x="694" y="300" width="150" height="40" rx="10"/><text class="mono chipt" x="769" y="326" text-anchor="middle">suggestBid</text>
+      <rect class="chip" x="860" y="300" width="104" height="40" rx="10"/><text class="mono chipt" x="912" y="326" text-anchor="middle">coach</text>
+      <rect class="chip" x="980" y="300" width="150" height="40" rx="10"/><text class="mono chipt" x="1055" y="326" text-anchor="middle">bots ×3</text>
+    </g>
+  </g>
+
+  <!-- arrow B -> C -->
+  <path d="M600 370 L600 398" stroke="#c9a24b" stroke-width="2"/>
+  <path d="M593 393 L600 402 L607 393 Z" fill="#c9a24b"/>
+
+  <!-- Layer C: UI -->
+  <g>
+    <rect x="56" y="404" width="1088" height="96" rx="16" fill="#1b2942" stroke="#2c3a57"/>
+    <text x="82" y="468" class="serif" font-size="46" fill="#c9a24b">C</text>
+    <text x="128" y="446" class="sans" font-size="21" font-weight="700" fill="#eae6dc">UI</text>
+    <text x="128" y="472" class="mono" font-size="14" fill="#8c97ad">React · Zustand</text>
+    <g>
+      <rect class="chip" x="360" y="432" width="320" height="40" rx="10"/><text class="mono chipt" x="520" y="458" text-anchor="middle">App · boardgame.io Client</text>
+      <rect class="chip" x="696" y="432" width="300" height="40" rx="10"/><text class="mono chipt" x="846" y="458" text-anchor="middle">SpadesBoard + components</text>
+      <rect class="chip" x="1012" y="432" width="118" height="40" rx="10"/><text class="mono chipt" x="1071" y="458" text-anchor="middle">Motion</text>
+    </g>
+  </g>
+
+  <!-- caption -->
+  <text x="56" y="530" class="mono" font-size="15" fill="#6c778c">legality → legalPlays   ·   scoring → scoreHand   ·   card states → legalPlays   —   never re-derived in the UI</text>
+</svg>
