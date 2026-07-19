@@ -14,7 +14,7 @@
 **Spades Coach** is a fully client-side (no server) game of [Spades](https://en.wikipedia.org/wiki/Spades_%28card_game%29) — you and an AI partner versus two AI opponents — with a coach that explains the *why* behind every decision. Ask for advice on any bid or play and it tells you **what to do and the reasoning**, drawing on the exact same analysis the bots use. It never plays for you; it teaches.
 
 <p align="center">
-  <img src="./assets/readme/screenshot.jpg" width="300" alt="Spades Coach on Android — status-bar scoreboard, compass-rose table with seat bids, a fanned hand, and the bid picker">
+  <img src="./assets/readme/screenshot.jpg" width="300" alt="Spades Coach on Android — the two-column US/THEM scoreboard, compass-rose table with seat bids, an auto-sorted fanned hand, and the bid picker">
 </p>
 
 ## Features
