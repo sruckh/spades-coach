@@ -348,6 +348,20 @@ body {
   font-size: 8px;
   vertical-align: middle;
 }
+/* Running bags carried toward the 10-bag sandbag penalty (💰 + count). */
+.score-col .bagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+  font: 600 11px/1 var(--f-data);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.score-col .bag-glyph {
+  font-size: 12px;
+  line-height: 1;
+}
 
 /* ---- avatar (compass seat marker) ---- */
 .avatar {

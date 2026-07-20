@@ -6,17 +6,22 @@ export interface StatusBarProps {
   bidTally?: string
   scoreUs: number
   scoreThem: number
+  /** Running bags carried by each side toward the 10-bag sandbag penalty. */
+  bagsUs: number
+  bagsThem: number
   /** Open the game-options modal (difficulty, Blind Nil, …). */
   onOptions?: () => void
 }
 
-/** Top zone: round line · your bid/made · running score, on the felt. */
+/** Top zone: round line · your bid/made · running score + bags, on the felt. */
 export function StatusBar({
   round,
   bidLabel = 'Your bid',
   bidTally,
   scoreUs,
   scoreThem,
+  bagsUs,
+  bagsThem,
   onOptions,
 }: StatusBarProps) {
   // Brass (gold) marks the side currently in the lead — an exact tie highlights
@@ -38,17 +43,28 @@ export function StatusBar({
           </div>
         )}
       </div>
-      <div className="score" aria-label={`Score — Us ${scoreUs}, Them ${scoreThem}`}>
+      <div
+        className="score"
+        aria-label={`Score — Us ${scoreUs} (${bagsUs} bags), Them ${scoreThem} (${bagsThem} bags)`}
+      >
         <div className={`score-col${leader === 'us' ? ' leading' : ''}`}>
           <span className="pts">{scoreUs}</span>
           <span className="who">
             {leader === 'us' && <span className="crown" aria-hidden="true">▲ </span>}Us
+          </span>
+          <span className="bagline">
+            <span className="bag-glyph" aria-hidden="true">💰</span>
+            {bagsUs}
           </span>
         </div>
         <div className={`score-col${leader === 'them' ? ' leading' : ''}`}>
           <span className="pts">{scoreThem}</span>
           <span className="who">
             {leader === 'them' && <span className="crown" aria-hidden="true">▲ </span>}Them
+          </span>
+          <span className="bagline">
+            <span className="bag-glyph" aria-hidden="true">💰</span>
+            {bagsThem}
           </span>
         </div>
       </div>

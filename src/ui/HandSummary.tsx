@@ -56,12 +56,18 @@ function reasons(b: TeamBreakdown): Line[] {
     )
   }
 
-  if (b.bagsThisHand > 0) {
-    out.push({
-      text: `${b.bagsThisHand} bag${b.bagsThisHand === 1 ? '' : 's'} — ${pts(b.bagsThisHand)} (now ${b.bagsAfter}/10)`,
-      tone: 'warn',
-    })
-  }
+  // Always surface the bag line — even at 0, players should see their running
+  // total toward the 10-bag sandbag threshold (not a silence that reads as "no
+  // bag info at all").
+  const bags = b.bagsThisHand
+  out.push(
+    bags > 0
+      ? {
+          text: `${bags} bag${bags === 1 ? '' : 's'} — ${pts(bags)} (now ${b.bagsAfter}/10)`,
+          tone: 'warn',
+        }
+      : { text: `0 bags this hand (now ${b.bagsAfter}/10)` },
+  )
 
   if (b.sandbagPenalty < 0) {
     out.push({ text: `Reached 10 bags — sandbag ${pts(b.sandbagPenalty)}`, tone: 'warn' })

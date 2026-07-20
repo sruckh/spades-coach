@@ -316,6 +316,8 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
         bidTally={bidTally}
         scoreUs={G.score.NS}
         scoreThem={G.score.EW}
+        bagsUs={G.bags.NS}
+        bagsThem={G.bags.EW}
         onOptions={openOptions}
       />
 
