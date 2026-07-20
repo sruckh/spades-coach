@@ -680,6 +680,234 @@ body {
   color: var(--tip-ink);
 }
 
+/* ---- status-bar options gear ---- */
+.status-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.status-lead .bidbar {
+  flex-basis: 100%;
+}
+.gear {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--felt-line);
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.gear:hover {
+  color: var(--ink-text);
+  border-color: var(--brass);
+}
+.gear:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+}
+
+/* ---- selected card (Blind-Nil 3-card pass) ---- */
+.pc.selected {
+  transform: translateY(-14px) var(--rot, rotate(0deg));
+  box-shadow:
+    0 14px 22px -8px rgba(0, 0, 0, 0.6),
+    0 0 0 2px var(--brass-bright);
+  z-index: 2;
+}
+
+/* ---- Blind Nil declaration button (bid step) ---- */
+.btn.blindnil {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--warn);
+  color: var(--warn);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ---- game options modal (centred in the frame) ---- */
+.options {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  width: min(92%, 380px);
+  max-height: 88%;
+  overflow-y: auto;
+  background: var(--card-stock);
+  color: var(--suit-black);
+  border-radius: 18px;
+  border: 1px solid var(--card-edge);
+  padding: 22px 22px calc(20px + env(safe-area-inset-bottom));
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+}
+.options .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 var(--caption) / 1 var(--f-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 10px;
+}
+.options .eyebrow::before {
+  content: '\2660';
+  color: var(--spade-glow);
+  font-size: 13px;
+}
+.options .sheet-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.12;
+  color: var(--suit-black);
+  margin-bottom: 18px;
+}
+.opt-field {
+  margin-bottom: 16px;
+}
+.opt-label {
+  font: 600 var(--label) / 1.2 var(--f-body);
+  color: var(--suit-black);
+  margin-bottom: 8px;
+}
+.opt-hint {
+  font: 400 var(--caption) / 1.4 var(--f-body);
+  color: var(--coach-body);
+  margin-top: 6px;
+}
+.segmented {
+  display: flex;
+  gap: 6px;
+}
+.seg {
+  flex: 1;
+  min-height: 40px;
+  border-radius: 9px;
+  border: 1px solid var(--card-edge);
+  background: transparent;
+  color: var(--coach-body);
+  font: 600 var(--label) / 1 var(--f-body);
+  cursor: pointer;
+}
+.seg.on {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--table-ink-deep);
+}
+.seg:focus-visible {
+  outline: 2px solid var(--suit-black);
+  outline-offset: 2px;
+}
+.opt-switch {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--card-edge);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.opt-switch-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.opt-switch .opt-label {
+  margin: 0;
+}
+.opt-knob {
+  flex: none;
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--card-edge);
+  position: relative;
+  transition: background 0.15s;
+}
+.opt-knob::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+.opt-switch.on .opt-knob {
+  background: var(--good);
+}
+.opt-switch.on .opt-knob::after {
+  transform: translateX(18px);
+}
+.opt-switch:focus-visible {
+  outline: 2px solid var(--suit-black);
+  outline-offset: 2px;
+}
+.options .gotit {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(160deg, var(--brass-bright), var(--brass));
+  color: var(--table-ink-deep);
+  font: 600 var(--label) / 1 var(--f-body);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.options .gotit:focus-visible {
+  outline: 2px solid var(--suit-black);
+  outline-offset: 2px;
+}
+
+/* ---- face-down card (hidden hand during a Blind-Nil decision) ---- */
+.pc.back {
+  cursor: default;
+  background: linear-gradient(135deg, var(--felt) 0%, var(--table-ink-deep) 100%);
+  border-color: var(--felt-line);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.backmark {
+  color: var(--brass);
+  opacity: 0.45;
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ---- Blind Nil decision (bid blind, or look) ---- */
+.blind-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
+}
+.blind-prompt .btn {
+  width: 100%;
+  min-height: 46px;
+}
+
 /* ---- reduced motion: cross-fades only, no sweep/pulse/lift ---- */
 @media (prefers-reduced-motion: reduce) {
   .pc,

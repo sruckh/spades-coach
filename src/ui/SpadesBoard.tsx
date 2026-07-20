@@ -1,8 +1,9 @@
 // The board: the single React view over the boardgame.io client. It reads the
 // (redacted) game view `G`, `ctx`, and the framework `moves`, and renders the
 // design-system layout: Frame → StatusBar → Table (compass Seats) + TrickZone →
-// Hand → (BidPicker while bidding) → ActionBar → CoachSheet. It dispatches exactly
-// two moves — `playCard` and `placeBid` — and it never re-derives rules: card
+// Hand → (BidPicker while bidding) → ActionBar → CoachSheet. It dispatches the
+// engine moves (`placeBid` / `playCard`, plus `blindNil` + `exchangeBlind` for the
+// authentic hidden-hand Blind Nil) and it never re-derives rules: card
 // states come from `legalPlays` (via `deriveHandCards`) and advice comes from the
 // Coach (`coachAdvice`), which only returns data. Motion is gated behind the
 // reduced-motion preference and the in-app motion setting. See `.goals/README.md`
@@ -12,7 +13,7 @@ import { useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import type { Ctx } from 'boardgame.io'
 import type { Bid, Card, PlayerID, Suit } from '../types'
-import { teamOf } from '../types'
+import { partnerOf, teamOf } from '../types'
 import type { SpadesView } from '../game/Spades'
 import { legalPlays } from '../analysis/legalPlays'
 import { coachAdvice, type CoachAdvice } from '../analysis/coach'
@@ -27,7 +28,8 @@ import { ActionBar } from './ActionBar'
 import { BidPicker } from './BidPicker'
 import { CoachSheet } from './CoachSheet'
 import { HandSummary } from './HandSummary'
-import { deriveHandCards, idleHandCards, isLegalPlay, sortHand } from './play'
+import { OptionsModal } from './OptionsModal'
+import { deriveHandCards, idleHandCards, isLegalPlay, selectableHandCards, sortHand } from './play'
 
 /** The human always sits South. */
 const HUMAN: PlayerID = '0'
@@ -36,6 +38,10 @@ const HUMAN: PlayerID = '0'
 export interface SpadesMoves {
   playCard: (card: Card) => void
   placeBid: (n: number) => void
+  /** Declare Blind Nil (then a 3-card pass follows via `exchangeBlind`). */
+  blindNil: () => void
+  /** Pass 3 chosen cards to your partner to complete a Blind Nil. */
+  exchangeBlind: (cardIds: string[]) => void
 }
 
 export interface SpadesBoardProps {
@@ -81,9 +87,14 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   const setSelectedCard = useUiStore((s) => s.setSelectedCard)
   const lastHandSeen = useUiStore((s) => s.lastHandSeen)
   const dismissHandSummary = useUiStore((s) => s.dismissHandSummary)
+  const openOptions = useUiStore((s) => s.openOptions)
   const settings = useUiStore((s) => s.settings)
 
   const [advice, setAdvice] = useState<CoachAdvice | null>(null)
+  // Cards the human has picked to pass during a Blind Nil exchange.
+  const [passIds, setPassIds] = useState<string[]>([])
+  // Which hand the human has revealed. Blind Nil is only offered *before* you peek.
+  const [peekedHand, setPeekedHand] = useState<number | null>(null)
 
   const reduced = Boolean(prefersReduced) || !settings.motion
   const phase = ctx.phase === 'bidding' ? 'bidding' : 'playing'
@@ -92,6 +103,25 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   // Sorted for display (alternating colours, high→low). This same order is what
   // `onSelect(index)` indexes into, so selection stays consistent with the fan.
   const myHand = sortHand(G.hands[HUMAN] ?? [])
+
+  // Blind-Nil 3-card pass: the human declared blind nil and now owes the exchange.
+  const exchanging = phase === 'bidding' && G.awaitingExchange === HUMAN
+
+  // Authentic Blind Nil: offered only when your side is behind by 100+ (house rule)
+  // and only *before* you look at your hand. Looking — or declaring — reveals it,
+  // so you can never bank the ±200 with a hand you've already sized up.
+  const BLIND_BEHIND = 100
+  const hasLooked = peekedHand === G.handNumber
+  const blindPrompt =
+    !gameover &&
+    phase === 'bidding' &&
+    isMyTurn &&
+    G.bids[HUMAN] === null &&
+    !exchanging &&
+    !hasLooked &&
+    settings.allowBlindNil &&
+    G.allowBlindNil &&
+    G.score.EW - G.score.NS >= BLIND_BEHIND // human is South (NS)
 
   // ---- seats ----
   const seats: SeatProps[] = PIDS.map((pid) => {
@@ -153,8 +183,9 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   }
 
   // ---- hand ----
-  const handCards =
-    phase === 'playing' && isMyTurn
+  const handCards = exchanging
+    ? selectableHandCards(myHand, passIds)
+    : phase === 'playing' && isMyTurn
       ? deriveHandCards(myHand, G.currentTrick, G.spadesBroken)
       : idleHandCards(myHand)
 
@@ -165,7 +196,18 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   // a whisper (never a throw); locked cards are also disabled at the Card level.
   function onSelect(index: number) {
     const card = myHand[index]
-    if (!card || phase !== 'playing' || !isMyTurn) return
+    if (!card) return
+    if (exchanging) {
+      const has = passIds.includes(card.id)
+      if (!has && passIds.length >= 3) {
+        setWhisper('Pass exactly 3 — tap a selected card to swap it out.')
+        return
+      }
+      setWhisper(null)
+      setPassIds(has ? passIds.filter((id) => id !== card.id) : [...passIds, card.id])
+      return
+    }
+    if (phase !== 'playing' || !isMyTurn) return
     if (!isLegalPlay(card, legalNow)) {
       setWhisper(
         led
@@ -208,6 +250,24 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
     setSelectedCard(null)
   }
 
+  function declareBlindNil() {
+    setWhisper(null)
+    setPeekedHand(G.handNumber) // committing reveals the hand for the exchange
+    moves.blindNil() // turn stays with you; the 3-card pass comes next
+  }
+
+  function lookAtHand() {
+    setWhisper(null)
+    setPeekedHand(G.handNumber) // you looked → Blind Nil is off the table this hand
+  }
+
+  function passSelected() {
+    if (passIds.length !== 3) return
+    moves.exchangeBlind(passIds)
+    setPassIds([])
+    setWhisper(null)
+  }
+
   // ---- primary action ----
   let primaryLabel = 'Waiting…'
   let primaryDisabled = true
@@ -216,6 +276,13 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   if (gameover) {
     const winner = (ctx.gameover as { winner?: string } | undefined)?.winner
     primaryLabel = winner === undefined ? 'Game over' : teamOf(HUMAN) === winner ? 'You win!' : 'You lost'
+  } else if (blindPrompt) {
+    primaryLabel = 'Bid blind, or look'
+  } else if (exchanging) {
+    const remaining = 3 - passIds.length
+    primaryLabel = remaining === 0 ? 'Pass these 3 cards' : `Pick ${remaining} to pass`
+    primaryDisabled = remaining !== 0
+    onPrimary = remaining === 0 ? passSelected : undefined
   } else if (phase === 'bidding') {
     primaryLabel = isMyTurn && G.bids[HUMAN] === null ? 'Pick a bid' : 'Waiting…'
   } else if (isMyTurn) {
@@ -228,7 +295,8 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
     }
   }
 
-  const showBidPicker = !gameover && phase === 'bidding' && isMyTurn && G.bids[HUMAN] === null
+  const showBidPicker =
+    !gameover && phase === 'bidding' && isMyTurn && G.bids[HUMAN] === null && !exchanging && !blindPrompt
   const bidSuggestion = advice?.suggestedAction?.kind === 'bid' ? advice.suggestedAction.bid : undefined
 
   return (
@@ -239,6 +307,7 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
         bidTally={bidTally}
         scoreUs={G.score.NS}
         scoreThem={G.score.EW}
+        onOptions={openOptions}
       />
 
       <Table
@@ -270,15 +339,35 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
 
       <Hand
         cards={handCards}
-        onPlay={phase === 'playing' && isMyTurn ? onSelect : undefined}
-        label={led ? `Your hand — following ${SUIT_GLYPH[led]}` : 'Your hand'}
+        faceDown={blindPrompt}
+        onPlay={exchanging || (phase === 'playing' && isMyTurn) ? onSelect : undefined}
+        label={
+          blindPrompt
+            ? 'Your hand is hidden — bid blind, or look'
+            : exchanging
+              ? `Blind Nil — pass 3 to ${SEATS[partnerOf(HUMAN)].name} (${passIds.length}/3)`
+              : led
+                ? `Your hand — following ${SUIT_GLYPH[led]}`
+                : 'Your hand'
+        }
       />
+
+      {blindPrompt && (
+        <div className="blind-prompt" role="group" aria-label="Blind Nil decision">
+          <button type="button" className="btn blindnil" onClick={declareBlindNil}>
+            Blind Nil · ±200
+          </button>
+          <button type="button" className="btn ghost" onClick={lookAtHand}>
+            Look at my hand
+          </button>
+        </div>
+      )}
 
       {showBidPicker && <BidPicker onBid={placeBid} suggestion={bidSuggestion} />}
 
       <ActionBar
         onAskCoach={askCoach}
-        coachEnabled={settings.coach}
+        coachEnabled={settings.coach && !blindPrompt}
         primaryLabel={primaryLabel}
         onPrimary={onPrimary}
         primaryDisabled={primaryDisabled}
@@ -302,6 +391,8 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
           onContinue={() => dismissHandSummary(G.lastHand!.handNumber)}
         />
       )}
+
+      <OptionsModal />
     </Frame>
   )
 }

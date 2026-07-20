@@ -48,6 +48,8 @@ export interface Settings {
   target: number
   speed: 'slow' | 'normal' | 'fast'
   motion: boolean
+  /** May the human declare Blind Nil (±200, with a 3-card partner pass)? */
+  allowBlindNil: boolean
 }
 
 // ---- seat ↔ playerID (S=0, E=1, N=2, W=3) ----

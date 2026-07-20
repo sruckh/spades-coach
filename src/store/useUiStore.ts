@@ -16,11 +16,14 @@ export const DEFAULT_SETTINGS: Settings = {
   target: 200,
   speed: 'normal',
   motion: true,
+  allowBlindNil: true,
 }
 
 export interface UiState {
   /** Is the Coach slide-up sheet showing? */
   coachOpen: boolean
+  /** Is the game-options modal showing? (Shown at startup; reopen via the ⚙.) */
+  optionsOpen: boolean
   /** Master toggle: auto-suggest at decision points + allow whispers. */
   coachEnabled: boolean
   /** One-line contextual whisper shown above the hand (null = hidden). */
@@ -37,6 +40,8 @@ export interface UiState {
   openCoach: () => void
   closeCoach: () => void
   toggleCoach: () => void
+  openOptions: () => void
+  closeOptions: () => void
   setCoachEnabled: (on: boolean) => void
   /** Show (or clear, with null) the contextual whisper. */
   setWhisper: (text: string | null) => void
@@ -61,6 +66,9 @@ export const useUiStore = create<UiState>()(
   persist(
     (set, get) => ({
       coachOpen: false,
+      // Shown once at the start of each session so players can pick difficulty
+      // and options; ephemeral (never persisted).
+      optionsOpen: true,
       coachEnabled: true,
       whisperText: null,
       selectedCard: null,
@@ -71,6 +79,8 @@ export const useUiStore = create<UiState>()(
       openCoach: () => set({ coachOpen: true }),
       closeCoach: () => set({ coachOpen: false }),
       toggleCoach: () => set((s) => ({ coachOpen: !s.coachOpen })),
+      openOptions: () => set({ optionsOpen: true }),
+      closeOptions: () => set({ optionsOpen: false }),
       setCoachEnabled: (on) => set({ coachEnabled: on }),
       setWhisper: (text) => set({ whisperText: text }),
 

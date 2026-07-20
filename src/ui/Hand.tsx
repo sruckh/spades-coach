@@ -14,6 +14,8 @@ export interface HandProps {
   cards: HandCard[]
   onPlay?: (index: number) => void
   label?: string
+  /** Render the whole hand face-down (Blind-Nil decision — you can't peek). */
+  faceDown?: boolean
 }
 
 // Fanned-arc geometry — spread + card size ported from `index.html`. The card
@@ -49,7 +51,7 @@ function fanStyle(i: number, n: number, overlap: number): CSSProperties {
   return style
 }
 
-export function Hand({ cards, onPlay, label = 'Your hand' }: HandProps) {
+export function Hand({ cards, onPlay, label = 'Your hand', faceDown = false }: HandProps) {
   const n = cards.length
   const handRef = useRef<HTMLDivElement>(null)
   const [overlap, setOverlap] = useState(MAX_OVERLAP)
@@ -74,8 +76,9 @@ export function Hand({ cards, onPlay, label = 'Your hand' }: HandProps) {
             rank={card.rank}
             suit={card.suit}
             state={card.state}
+            back={faceDown}
             style={fanStyle(i, n, overlap)}
-            onClick={onPlay ? () => onPlay(i) : undefined}
+            onClick={faceDown || !onPlay ? undefined : () => onPlay(i)}
           />
         ))}
       </div>

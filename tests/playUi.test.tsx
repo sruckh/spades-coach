@@ -54,7 +54,7 @@ const CTX = {
 } as unknown as Ctx
 
 function renderBoard() {
-  const moves = { playCard: vi.fn(), placeBid: vi.fn() }
+  const moves = { playCard: vi.fn(), placeBid: vi.fn(), blindNil: vi.fn(), exchangeBlind: vi.fn() }
   const utils = render(<SpadesBoard G={makeView()} ctx={CTX} moves={moves} playerID="0" />)
   return { ...utils, moves }
 }
@@ -65,6 +65,7 @@ beforeEach(() => {
     selectedCard: null,
     whisperText: null,
     coachOpen: false,
+    optionsOpen: false,
     settings: DEFAULT_SETTINGS,
   })
 })

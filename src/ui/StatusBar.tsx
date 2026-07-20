@@ -6,6 +6,8 @@ export interface StatusBarProps {
   bidTally?: string
   scoreUs: number
   scoreThem: number
+  /** Open the game-options modal (difficulty, Blind Nil, …). */
+  onOptions?: () => void
 }
 
 /** Top zone: round line · your bid/made · running score, on the felt. */
@@ -15,13 +17,19 @@ export function StatusBar({
   bidTally,
   scoreUs,
   scoreThem,
+  onOptions,
 }: StatusBarProps) {
   // Brass (gold) marks the side currently in the lead — an exact tie highlights
   // neither, keeping the accent rare and meaningful. A ▲ backs up the colour.
   const leader = scoreUs === scoreThem ? null : scoreUs > scoreThem ? 'us' : 'them'
   return (
     <header className="status">
-      <div>
+      <div className="status-lead">
+        {onOptions && (
+          <button type="button" className="gear" onClick={onOptions} aria-label="Game options">
+            <span aria-hidden="true">⚙</span>
+          </button>
+        )}
         <div className="round">{round}</div>
         {bidTally !== undefined && (
           <div className="bidbar">

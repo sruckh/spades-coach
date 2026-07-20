@@ -54,3 +54,14 @@ export function deriveHandCards(
 export function idleHandCards(hand: readonly Card[]): HandCard[] {
   return hand.map((c) => ({ rank: c.rank, suit: c.suit, id: c.id, state: 'idle' as const }))
 }
+
+/** Hand cards for the Blind-Nil 3-card pass: chosen cards get the `selected` ring. */
+export function selectableHandCards(hand: readonly Card[], selectedIds: readonly string[]): HandCard[] {
+  const chosen = new Set(selectedIds)
+  return hand.map((c) => ({
+    rank: c.rank,
+    suit: c.suit,
+    id: c.id,
+    state: chosen.has(c.id) ? ('selected' as const) : ('idle' as const),
+  }))
+}
