@@ -777,6 +777,34 @@ body {
 .opt-field {
   margin-bottom: 16px;
 }
+.opt-rules {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  border: 1px solid var(--brass);
+  background: transparent;
+  color: var(--brass);
+  font: 600 var(--label) / 1.2 var(--f-body);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-align: left;
+}
+.opt-rules:hover {
+  background: rgba(201, 162, 75, 0.08);
+}
+.opt-rules:focus-visible {
+  outline: 2px solid var(--suit-black);
+  outline-offset: 2px;
+}
+.opt-rules-glyph {
+  color: var(--spade-glow);
+  font-size: 16px;
+  line-height: 1;
+}
 .opt-label {
   font: 600 var(--label) / 1.2 var(--f-body);
   color: var(--suit-black);
@@ -878,6 +906,210 @@ body {
 .options .gotit:focus-visible {
   outline: 2px solid var(--suit-black);
   outline-offset: 2px;
+}
+
+/* ---- official-rules overlay (centred, scrollable body) ---- */
+.rules {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: min(94%, 460px);
+  height: min(86%, 560px);
+  display: flex;
+  flex-direction: column;
+  background: var(--card-stock);
+  color: var(--suit-black);
+  border-radius: 18px;
+  border: 1px solid var(--card-edge);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+.rules-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px 12px;
+  border-bottom: 1px solid var(--card-edge);
+}
+.rules-head .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 var(--caption) / 1 var(--f-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 6px;
+}
+.rules-head .eyebrow::before {
+  content: '\2660';
+  color: var(--spade-glow);
+  font-size: 13px;
+}
+.rules-head .sheet-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.12;
+  color: var(--suit-black);
+  margin: 0;
+}
+.rules-close {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--card-edge);
+  background: transparent;
+  color: var(--suit-black);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+.rules-close:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+.rules-close:focus-visible {
+  outline: 2px solid var(--suit-black);
+  outline-offset: 2px;
+}
+.rules-body {
+  overflow-y: auto;
+  padding: 16px 22px calc(20px + env(safe-area-inset-bottom));
+}
+.rules-body section {
+  margin-bottom: 16px;
+}
+.rules-body h3 {
+  font: 600 var(--label) / 1.2 var(--f-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 6px;
+}
+.rules-body p {
+  font: 400 var(--body) / 1.55 var(--f-body);
+  color: var(--coach-body);
+  margin-bottom: 8px;
+}
+.rules-body strong {
+  color: var(--suit-black);
+  font-weight: 600;
+}
+
+/* ---- game-over animation + Play Again / Exit result menu ---- */
+.gameover {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 42%, rgba(30, 42, 68, 0.82), rgba(13, 20, 32, 0.94));
+  overflow: hidden;
+}
+.gameover.win {
+  background: radial-gradient(circle at 50% 42%, rgba(92, 154, 110, 0.34), rgba(13, 20, 32, 0.94));
+}
+.gameover.lose {
+  background: radial-gradient(circle at 50% 42%, rgba(192, 57, 43, 0.3), rgba(13, 20, 32, 0.95));
+}
+.go-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+}
+.go-burst {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.go-spark {
+  position: absolute;
+  color: var(--brass-bright);
+  font-size: 22px;
+  line-height: 1;
+}
+.go-headline {
+  text-align: center;
+  padding: 0 24px;
+  z-index: 1;
+}
+.go-eyebrow {
+  font: 600 var(--caption) / 1 var(--f-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+}
+.go-title {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(40px, 12vw, 64px);
+  line-height: 1;
+  margin: 0;
+}
+.gameover.win .go-title {
+  color: var(--good);
+  text-shadow: 0 0 24px rgba(92, 154, 110, 0.55);
+}
+.gameover.lose .go-title {
+  color: var(--suit-red);
+  text-shadow: 0 0 18px rgba(192, 57, 43, 0.45);
+}
+.go-sub {
+  font: 400 var(--body) / 1.5 var(--f-body);
+  color: var(--ink-text);
+  margin: 12px 0 0;
+}
+.result-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(80%, 320px);
+  margin: 22px auto 0;
+}
+.result-menu .btn {
+  width: 100%;
+}
+
+/* ---- post-Exit "safe to close" screen (browser refused window.close) ---- */
+.exit-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 32px;
+  background: var(--felt);
+  color: var(--ink-text);
+}
+.exit-screen .go-eyebrow {
+  color: var(--brass);
+}
+.exit-screen h2 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 26px;
+  margin: 8px 0 10px;
+}
+.exit-screen p {
+  font: 400 var(--body) / 1.5 var(--f-body);
+  color: var(--ink-muted);
+  margin: 0 auto 20px;
+  max-width: 320px;
 }
 
 /* ---- face-down card (hidden hand during a Blind-Nil decision) ---- */

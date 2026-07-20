@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react'
 import type { Settings, Tier } from '../types'
 import { useUiStore } from '../store/useUiStore'
+import { RulesModal } from './RulesModal'
 
 const TIERS: { value: Tier; label: string; hint: string }[] = [
   { value: 'beginner', label: 'Beginner', hint: 'Gentle bots, straightforward play.' },
@@ -23,6 +24,7 @@ export function OptionsModal() {
   const close = useUiStore((s) => s.closeOptions)
   const settings = useUiStore((s) => s.settings)
   const update = useUiStore((s) => s.updateSettings)
+  const openRules = useUiStore((s) => s.openRules)
   const startRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -48,6 +50,16 @@ export function OptionsModal() {
         <h2 id="options-title" className="sheet-title">
           Set up your game
         </h2>
+
+        <button
+          type="button"
+          className="opt-rules"
+          onClick={openRules}
+          data-testid="open-rules"
+        >
+          <span className="opt-rules-glyph" aria-hidden="true">♠</span>
+          How to play — official rules
+        </button>
 
         <div className="opt-field">
           <div className="opt-label">Difficulty</div>
@@ -118,6 +130,8 @@ export function OptionsModal() {
           Start playing
         </button>
       </div>
+
+      <RulesModal />
     </>
   )
 }

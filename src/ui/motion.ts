@@ -18,6 +18,10 @@ export const MOTION_MS = {
   sheet: 300,
   /** Playable-card lift. */
   lift: 180,
+  /** Game-over headline reveal. */
+  gameOver: 700,
+  /** Win celebration particle burst. */
+  burst: 900,
 } as const
 
 const EASE_OUT = [0.2, 0.8, 0.2, 1] as const
@@ -89,4 +93,62 @@ export function liftTransition(reduced: boolean): Transition {
   return reduced
     ? { duration: 0.15, ease: 'easeOut' }
     : { duration: secs(MOTION_MS.lift), ease: EASE_OUT }
+}
+
+/** Game-over headline. Win = celebratory scale-up with a small overshoot; lose =
+ *  a somber settle back to centre. Reduced → plain fade. */
+export function gameOverVariants(reduced: boolean, win: boolean): Variants {
+  if (reduced) {
+    return {
+      initial: { opacity: 0 },
+      animate: { opacity: 1, transition: { duration: secs(MOTION_MS.sheet) } },
+    }
+  }
+  return win
+    ? {
+        initial: { opacity: 0, scale: 0.55 },
+        animate: {
+          opacity: 1,
+          scale: [0.55, 1.12, 1],
+          transition: { duration: secs(MOTION_MS.gameOver), ease: EASE_OUT },
+        },
+      }
+    : {
+        initial: { opacity: 0, scale: 1.08, y: -14 },
+        animate: {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          transition: { duration: secs(MOTION_MS.gameOver) * 0.85, ease: EASE_OUT },
+        },
+      }
+}
+
+/** Win celebration: spade-glyph particles radiating from centre. `custom` carries
+ *  {angle, dist, delay} per particle. Reduced → particles render inert (the
+ *  GameOver component omits them entirely when reduced). */
+export interface BurstParticle {
+  angle: number
+  dist: number
+  delay: number
+}
+
+export function burstVariants(reduced: boolean): Variants {
+  if (reduced) {
+    return { initial: { opacity: 0 }, animate: { opacity: 0 } }
+  }
+  return {
+    initial: { opacity: 0, x: 0, y: 0, scale: 0.4 },
+    animate: (c: BurstParticle) => ({
+      opacity: [0, 1, 0],
+      x: Math.cos(c.angle) * c.dist,
+      y: Math.sin(c.angle) * c.dist,
+      scale: [0.4, 1, 0.8],
+      transition: {
+        duration: secs(MOTION_MS.burst),
+        delay: c.delay,
+        ease: EASE_OUT,
+      },
+    }),
+  }
 }

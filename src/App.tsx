@@ -51,9 +51,12 @@ function makeClient(tier: Tier) {
 export function App() {
   const tier = useUiStore((s) => s.settings.tier)
   const speed = useUiStore((s) => s.settings.speed)
-  const SpadesClient = useMemo(() => makeClient(tier), [tier])
+  const gameKey = useUiStore((s) => s.gameKey)
+  // Rebuild the client on difficulty change OR when Play Again / Exit bumps
+  // gameKey — a fresh client + the `key` below remount a clean match.
+  const SpadesClient = useMemo(() => makeClient(tier), [tier, gameKey])
   useEffect(() => {
     setBotPacing(...PACING[speed])
   }, [speed])
-  return <SpadesClient playerID="0" />
+  return <SpadesClient key={gameKey} playerID="0" />
 }

@@ -36,12 +36,20 @@ export interface UiState {
   settings: Settings
   /** Completed Tutor lesson ids (persisted). */
   tutorProgress: string[]
+  /** Is the official-rules overlay showing? (Ephemeral.) */
+  rulesOpen: boolean
+  /** Bumped to force a fresh match (Play Again / Exit resets). (Ephemeral.) */
+  gameKey: number
+  /** True after the user hit Exit and the tab refused to self-close. (Ephemeral.) */
+  exited: boolean
 
   openCoach: () => void
   closeCoach: () => void
   toggleCoach: () => void
   openOptions: () => void
   closeOptions: () => void
+  openRules: () => void
+  closeRules: () => void
   setCoachEnabled: (on: boolean) => void
   /** Show (or clear, with null) the contextual whisper. */
   setWhisper: (text: string | null) => void
@@ -54,6 +62,12 @@ export interface UiState {
 
   /** Patch one or more settings fields. */
   updateSettings: (patch: Partial<Settings>) => void
+
+  /** Start a fresh match: bump the gameKey (App remounts the client) and clear
+   *  the ephemeral view state so nothing from the finished game lingers. */
+  newGame: () => void
+  /** Toggle the post-Exit "safe to close" screen. */
+  setExited: (on: boolean) => void
 
   /** Mark a lesson complete (idempotent). */
   markLessonDone: (id: string) => void
@@ -75,12 +89,17 @@ export const useUiStore = create<UiState>()(
       lastHandSeen: null,
       settings: DEFAULT_SETTINGS,
       tutorProgress: [],
+      rulesOpen: false,
+      gameKey: 0,
+      exited: false,
 
       openCoach: () => set({ coachOpen: true }),
       closeCoach: () => set({ coachOpen: false }),
       toggleCoach: () => set((s) => ({ coachOpen: !s.coachOpen })),
       openOptions: () => set({ optionsOpen: true }),
       closeOptions: () => set({ optionsOpen: false }),
+      openRules: () => set({ rulesOpen: true }),
+      closeRules: () => set({ rulesOpen: false }),
       setCoachEnabled: (on) => set({ coachEnabled: on }),
       setWhisper: (text) => set({ whisperText: text }),
 
@@ -89,6 +108,17 @@ export const useUiStore = create<UiState>()(
       dismissHandSummary: (handNumber) => set({ lastHandSeen: handNumber }),
 
       updateSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
+
+      newGame: () =>
+        set((s) => ({
+          gameKey: s.gameKey + 1,
+          lastHandSeen: null,
+          selectedCard: null,
+          whisperText: null,
+          coachOpen: false,
+          exited: false,
+        })),
+      setExited: (on) => set({ exited: on }),
 
       markLessonDone: (id) =>
         set((s) => (s.tutorProgress.includes(id) ? s : { tutorProgress: [...s.tutorProgress, id] })),

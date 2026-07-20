@@ -13,7 +13,15 @@ import {
 
 describe('motion durations', () => {
   it('matches the design contract (ms)', () => {
-    expect(MOTION_MS).toEqual({ card: 320, trickCollect: 420, bidPulse: 500, sheet: 300, lift: 180 })
+    expect(MOTION_MS).toEqual({
+      card: 320,
+      trickCollect: 420,
+      bidPulse: 500,
+      sheet: 300,
+      lift: 180,
+      gameOver: 700,
+      burst: 900,
+    })
   })
 })
 

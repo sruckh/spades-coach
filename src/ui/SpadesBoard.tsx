@@ -28,6 +28,7 @@ import { ActionBar } from './ActionBar'
 import { BidPicker } from './BidPicker'
 import { CoachSheet } from './CoachSheet'
 import { HandSummary } from './HandSummary'
+import { GameOver } from './GameOver'
 import { OptionsModal } from './OptionsModal'
 import { deriveHandCards, idleHandCards, isLegalPlay, selectableHandCards, sortHand } from './play'
 
@@ -89,6 +90,8 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   const dismissHandSummary = useUiStore((s) => s.dismissHandSummary)
   const openOptions = useUiStore((s) => s.openOptions)
   const settings = useUiStore((s) => s.settings)
+  const exited = useUiStore((s) => s.exited)
+  const newGame = useUiStore((s) => s.newGame)
 
   const [advice, setAdvice] = useState<CoachAdvice | null>(null)
   // Cards the human has picked to pass during a Blind Nil exchange.
@@ -99,6 +102,8 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
   const reduced = Boolean(prefersReduced) || !settings.motion
   const phase = ctx.phase === 'bidding' ? 'bidding' : 'playing'
   const gameover = Boolean(ctx.gameover)
+  const goWinner = (ctx.gameover as { winner?: string } | undefined)?.winner
+  const humanWon = goWinner !== undefined && goWinner === teamOf(HUMAN)
   const isMyTurn = !gameover && ctx.currentPlayer === HUMAN
   // Sorted for display (alternating colours, high→low). This same order is what
   // `onSelect(index)` indexes into, so selection stays consistent with the fan.
@@ -299,6 +304,10 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
     !gameover && phase === 'bidding' && isMyTurn && G.bids[HUMAN] === null && !exchanging && !blindPrompt
   const bidSuggestion = advice?.suggestedAction?.kind === 'bid' ? advice.suggestedAction.bid : undefined
 
+  // The game-over animation fires only after the final hand's score summary has
+  // been dismissed (HandSummary "See result" → lastHandSeen catches up).
+  const showGameOver = gameover && !!G.lastHand && lastHandSeen === G.lastHand.handNumber
+
   return (
     <Frame>
       <StatusBar
@@ -393,6 +402,24 @@ export function SpadesBoard({ G, ctx, moves }: SpadesBoardProps) {
       )}
 
       <OptionsModal />
+
+      {showGameOver && !exited && <GameOver win={humanWon} reduced={reduced} />}
+
+      {exited && (
+        <div className="exit-screen" role="dialog" aria-modal="true" aria-labelledby="exit-title">
+          <div className="go-eyebrow">Thanks for playing</div>
+          <h2 id="exit-title">So long, partner</h2>
+          <p>
+            Your tab didn&apos;t self-close — it&apos;s safe to close this window now. Or deal a
+            fresh hand.
+          </p>
+          <div className="result-menu">
+            <button type="button" className="btn primary" onClick={() => newGame()}>
+              New game
+            </button>
+          </div>
+        </div>
+      )}
     </Frame>
   )
 }
